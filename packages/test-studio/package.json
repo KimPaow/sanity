@@ -45,6 +45,7 @@
     "humanize-list": "^1.0.1",
     "prop-types": "^15.6.0",
     "react": "^16.8",
+    "react-confetti": "^5.0.1",
     "react-dom": "^16.8",
     "react-icons": "^2.2.7",
     "sanity-plugin-dashboard-widget-cats": "0.0.2",
