@@ -100,6 +100,7 @@ class AnalyticsWithPublished extends React.Component {
     return (
       <div className={styles.root}>
         <h3>{title}</h3>
+        <div className={styles.chart}>
         <ResponsiveContainer width="100%" aspect={16 / 8}>
           <ComposedChart width={600} height={400} data={formattedData}>
             <defs>
@@ -166,6 +167,7 @@ class AnalyticsWithPublished extends React.Component {
             }
           </ComposedChart>
         </ResponsiveContainer>
+        </div>
       </div>
     )
   }
