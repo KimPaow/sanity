@@ -2,6 +2,8 @@ import React from 'react'
 import RefreshIcon from 'part:@sanity/base/sync-icon'
 import EyeIcon from 'part:@sanity/base/eye-icon'
 import EditIcon from 'part:@sanity/base/edit-icon'
+import FaAreaChart from 'react-icons/lib/fa/area-chart'
+import FaBarChart from 'react-icons/lib/fa/bar-chart'
 import MdImage from 'react-icons/lib/md/image'
 import JsonDocumentDump from './components/JsonDocumentDump'
 import {DeveloperPreview} from './previews/developer'
@@ -253,8 +255,8 @@ export default () =>
                     .component(DeveloperPreview)
                     .icon(EyeIcon)
                     .title('Preview'),
-                  S.view.component(AnalyticsComponent).icon(EyeIcon).title('Simple anlytics'),
-                  S.view.component(AnalyticsCustomComponent).title('Publish events').icon(EyeIcon)
+                  S.view.component(AnalyticsComponent).icon(FaAreaChart).title('Simple anlytics'),
+                  S.view.component(AnalyticsCustomComponent).title('Publish events').icon(FaBarChart)
                 ])
             )
       }),
