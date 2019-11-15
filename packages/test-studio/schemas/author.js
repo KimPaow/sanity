@@ -49,6 +49,10 @@ export default {
       }
     },
     {
+      name: 'pathname',
+      type: 'string'
+    },
+    {
       name: 'image',
       title: 'Image',
       type: 'image',

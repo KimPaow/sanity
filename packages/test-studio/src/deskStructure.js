@@ -6,9 +6,132 @@ import MdImage from 'react-icons/lib/md/image'
 import JsonDocumentDump from './components/JsonDocumentDump'
 import {DeveloperPreview} from './previews/developer'
 import S from '@sanity/desk-tool/structure-builder'
+import AnalyticsWidget from 'part:@sanity/google-analytics/widget'
+import AnalyticsWithPublished from './widgets/AnalyticsWithPublished'
+import BouncesOverTime from './widgets/BouncesOverTime'
 
 // For testing. Bump the timeout to introduce som lag
 const delay = (val, ms = 10) => new Promise(resolve => setTimeout(resolve, ms, val))
+
+function Preview(props) {
+  const {history, draft, published} = props
+  const {snapshot: historical, isLoading} = history.document
+
+  if (!historical && isLoading) {
+    return <Spinner center message="Loading document" />
+  }
+
+  return (
+    <JSONPretty
+      data={historical || draft || published}
+      theme={monikai}
+      mainStyle="white-space: pre-wrap"
+    />
+  )
+}
+
+
+function AnalyticsCustomComponent(props) {
+  const {pathname} = props.displayedDocument
+  return (
+    <>
+      <AnalyticsWithPublished
+        title="Users all pages last year"
+        draft={props.draft}
+        published={props.published}
+        historical={props.historical}
+        labels={['Date', 'Users', 'Sessions', 'New users']}
+        config={{
+          reportType: 'ga',
+          query: {
+            dimensions: 'ga:date',
+            metrics: 'ga:users, ga:sessions, ga:newUsers',
+            'start-date': '365daysAgo',
+            'end-date': 'yesterday'
+          }
+        }}
+      />
+
+      {pathname && (
+        <BouncesOverTime
+          title={`Bounce rate for ${pathname} last 30 days`}
+          draft={props.draft}
+          published={props.published}
+          historical={props.historical}
+          labels={['Date', 'Bounce rate']}
+          config={{
+            reportType: 'ga',
+            query: {
+              dimensions: 'ga:date',
+              metrics: 'ga:bounceRate',
+              'start-date': '30daysAgo',
+              'end-date': 'yesterday',
+              filters: `ga:pagePath=~^${pathname}`
+            }
+          }}
+        />
+      )}
+    </>
+  )
+}
+
+function AnalyticsComponent(props) {
+  return (
+    <div style={{padding: '1rem'}}>
+      <h3>Users, sessions and new users last 30 days</h3>
+      <AnalyticsWidget
+        config={{
+          onSelect: (selectedItem, cell, chart) => {
+            console.log('select', selectedItem, cell, chart)
+          },
+          reportType: 'ga',
+          query: {
+            dimensions: 'ga:date',
+            metrics: 'ga:users, ga:sessions, ga:newUsers',
+            'start-date': '30daysAgo',
+            'end-date': 'yesterday'
+          },
+          chart: {
+            axes: {
+              x: {
+                0: { label: 'Date' }
+              }
+            },
+            type: 'LINE',
+            series: {
+              0: {title: 'Users', color: '#145eda'},
+              1: {title: 'Sessions', color: '#16ae3c'},
+              2: {title: 'New users', color: '#cb160c'}
+            }
+          }
+      }} />
+      <h3>Bounce rate last 30 days</h3>
+      <AnalyticsWidget config={{
+        onSelect: (selectedItem, cell, chart) => {
+          console.log('select', selectedItem, cell, chart)
+        },
+        reportType: 'ga',
+        query: {
+          dimensions: 'ga:date',
+          metrics: 'ga:bounceRate',
+          'start-date': '30daysAgo',
+          'end-date': 'yesterday'
+        },
+        chart: {
+          axes: {
+            x: {
+              0: { label: 'Date' }
+            }
+          },
+          type: 'LINE',
+          series: {
+            0: {title: 'Bounce rate', color: '#145eda'},
+          }
+        }
+      }} />
+    </div>
+  )
+}
 
 export default () =>
   S.list()
@@ -129,7 +252,9 @@ export default () =>
                   S.view
                     .component(DeveloperPreview)
                     .icon(EyeIcon)
-                    .title('Preview')
+                    .title('Preview'),
+                  S.view.component(AnalyticsComponent).icon(EyeIcon).title('Simple anlytics'),
+                  S.view.component(AnalyticsCustomComponent).title('Publish events').icon(EyeIcon)
                 ])
             )
       }),

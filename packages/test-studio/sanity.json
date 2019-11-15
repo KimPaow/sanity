@@ -41,6 +41,7 @@
     "dashboard-widget-cats",
     "dashboard-widget-document-count",
     "dashboard-widget-document-list",
+    "google-analytics",
     "mux-input"
   ],
   "parts": [
