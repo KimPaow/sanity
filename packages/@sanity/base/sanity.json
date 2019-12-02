@@ -892,6 +892,10 @@
       "path": "components/icons/History.js"
     },
     {
+      "implements": "part:@sanity/base/launch-icon",
+      "path": "components/icons/Launch.js"
+    },
+    {
       "implements": "part:@sanity/base/sanity-logo",
       "path": "components/logos/SanityLogo.js"
     },
